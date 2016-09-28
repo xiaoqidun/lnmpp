@@ -876,7 +876,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=f206a3a04712aa29245f0fcdb27797cb489e506b
+    sha1=78f731f67101efd51c9edebab3eaa7e8a39fc534
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
