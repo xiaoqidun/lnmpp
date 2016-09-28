@@ -41,11 +41,11 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.16
+    ! test -n "$PHP_VER" && PHP_VER=5.6.26
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.9.7
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.27
-    ! test -n "$PGSQL_VER" && PGSQL_VER=9.4.5
+    ! test -n "$NGINX_VER" && NGINX_VER=1.11.4
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.33
+    ! test -n "$PGSQL_VER" && PGSQL_VER=9.6rc1
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
@@ -985,7 +985,7 @@ src_configure() {
     fi
 }
 path
-VER=1.7
+VER=1.8
 for((i=1;i<=$#;i++)); do
     ini_cfg=${!i}
     ini_cfg_a=`echo $ini_cfg | sed -r s/^-?-?.*=//`
