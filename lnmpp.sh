@@ -224,7 +224,7 @@ bin_sha1() {
             test "$aaaa" = "x86_64" && aaaa=x64
             test "$(echo $aaaa | cut -b1-3)" = "arm" && aaaa=arm
             if test "$aaaa" = "x64" ; then
-                echo 717320abba5bdd9b14c3a5569b7d16e6c0bff309
+                echo daa147f2f63b495af1a97d8c05edf37c786cfa2e
             elif test "$aaaa" = "arm" ; then
                 echo bc7cb6b16b4ee971d87e260f4bedbe275d9d8b7d
             else
