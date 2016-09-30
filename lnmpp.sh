@@ -45,7 +45,7 @@ init() {
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
     ! test -n "$NGINX_VER" && NGINX_VER=1.11.4
     ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.33
-    ! test -n "$PGSQL_VER" && PGSQL_VER=9.6rc1
+    ! test -n "$PGSQL_VER" && PGSQL_VER=9.6.0
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
@@ -876,7 +876,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=78f731f67101efd51c9edebab3eaa7e8a39fc534
+    sha1=6510a4b521e680ba755d18799cbd71bb3e79a009
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
