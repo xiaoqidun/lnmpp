@@ -159,7 +159,7 @@ disable() {
     esac
 }
 bg_exec() {
-    rm -f > $BGEXEC_EXIT_STATUS_FILE
+    rm -f $BGEXEC_EXIT_STATUS_FILE
     $@
     echo $? > $BGEXEC_EXIT_STATUS_FILE
 }
