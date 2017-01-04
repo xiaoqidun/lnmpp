@@ -41,10 +41,10 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.28
+    ! test -n "$PHP_VER" && PHP_VER=5.6.29
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.11.6
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.34
+    ! test -n "$NGINX_VER" && NGINX_VER=1.11.8
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.35
     ! test -n "$PGSQL_VER" && PGSQL_VER=9.6.1
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
@@ -102,7 +102,7 @@ init() {
         $PHP_PGSQL $PHP_MYSQL"
     fi
     BFTPD_CONFIGURE="./configure --prefix=$BFTPD_PREFIX --enable-libz"
-    NGINX_CONFIGURE="./configure --prefix=$NGINX_PREFIX --with-ipv6 --with-stream --with-stream_ssl_module\
+    NGINX_CONFIGURE="./configure --prefix=$NGINX_PREFIX --with-stream --with-stream_ssl_module\
     --with-http_v2_module --with-http_ssl_module --with-http_realip_module --with-http_addition_module\
     --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module\
     --with-http_gunzip_module --with-http_gzip_static_module --with-http_auth_request_module --with-http_random_index_module\
