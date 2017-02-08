@@ -41,9 +41,9 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.29
+    ! test -n "$PHP_VER" && PHP_VER=5.6.30
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.11.8
+    ! test -n "$NGINX_VER" && NGINX_VER=1.11.9
     ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.35
     ! test -n "$PGSQL_VER" && PGSQL_VER=9.6.1
     LIBMCRYPT_VER=2.5.8
@@ -228,7 +228,7 @@ bin_sha1() {
             elif test "$aaaa" = "arm" ; then
                 echo bc7cb6b16b4ee971d87e260f4bedbe275d9d8b7d
             else
-                echo http://aite.me/
+                echo http://aite.xyz/
             fi
         ;;
         "centos7")
@@ -241,11 +241,11 @@ bin_sha1() {
             if test "$aaaa" = "x64" ; then
                 echo fe1e901e604b822edd4c2aac239dd24556853378
             else
-                echo http://aite.me/
+                echo http://aite.xyz/
             fi
         ;;
         *)
-            echo http://aite.me/
+            echo http://aite.xyz/
         ;;
     esac
 }
@@ -415,7 +415,7 @@ helloworld() {
     test $OS = "ubuntu" && vvv=$(echo $OS_VER | awk -F '.' '{print$1}')
     cat <<HELLOWORLD
 -----------------------------
-Web: http://aite.me/
+Web: http://aite.xyz/
 Web: http://lnmpp.net/
 Lnmpp: $VER for $OS $vvv
 Q q: 88966001 and 759234755
@@ -876,7 +876,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=26d3b5673e525274cea6b3536e1ab9ec6dbc43c8
+    sha1=8ac9420610517a689551e244410ae247553a29c3
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
@@ -994,4 +994,4 @@ for((i=1;i<=$#;i++)); do
 done
 init $@
 exit
-aite.me
+aite.xyz
