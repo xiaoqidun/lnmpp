@@ -926,7 +926,7 @@ bin_extract() {
 sfx_extract() {
     input=$(which $0)
     output="data.tmp"
-    sed -n "/^aite[.]me/,$ p" $input | sed "1d" > $output
+    sed -n "/^aite[.]xyz/,$ p" $input | sed "1d" > $output
     if test "$(sha1sum $output | awk '{print$1}')" != "" ; then
         echo Sfx unpack data error
         rm -f $output
