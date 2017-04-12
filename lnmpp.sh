@@ -43,7 +43,7 @@ init() {
     PHPFPM_GROUP=linux
     ! test -n "$PHP_VER" && PHP_VER=5.6.30
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.11.11
+    ! test -n "$NGINX_VER" && NGINX_VER=1.11.13
     ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.35
     ! test -n "$PGSQL_VER" && PGSQL_VER=9.6.2
     LIBMCRYPT_VER=2.5.8
@@ -416,7 +416,6 @@ helloworld() {
     cat <<HELLOWORLD
 -----------------------------
 Web: http://aite.xyz/
-Web: http://lnmpp.net/
 Lnmpp: $VER for $OS $vvv
 Q q: 88966001 and 759234755
 Qgroup: 397723874 185806953
@@ -887,7 +886,7 @@ xqd_extract() {
         fi
     else
         test -f $file && rm -f $file 2>> /dev/null
-        wget -q -T 120 -O $file http://lnmpp.net/$file >> /dev/null 2>&1 &
+        wget -q -T 120 -O $file http://lnmpp.aite.xyz/$file >> /dev/null 2>&1 &
         echo -n Download lnmpp package\ ;wait_pid $!
         if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
             echo -ne done\\n-----------------------------\\n
@@ -912,7 +911,7 @@ bin_extract() {
         fi
     else
         test -f $file && rm -f $file 2>> /dev/null
-        wget -q -T 120 -O $file http://lnmpp.net/$file >> /dev/null 2>&1 &
+        wget -q -T 120 -O $file http://lnmpp.aite.xyz/$file >> /dev/null 2>&1 &
         echo -n Download lnmpp package\ ;wait_pid $!
         if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
             echo -ne done\\n-----------------------------\\n
