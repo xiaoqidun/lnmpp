@@ -43,7 +43,7 @@ init() {
     PHPFPM_GROUP=linux
     ! test -n "$PHP_VER" && PHP_VER=5.6.30
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.11.13
+    ! test -n "$NGINX_VER" && NGINX_VER=1.12.0
     ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.35
     ! test -n "$PGSQL_VER" && PGSQL_VER=9.6.2
     LIBMCRYPT_VER=2.5.8
@@ -875,7 +875,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=8ac9420610517a689551e244410ae247553a29c3
+    sha1=f8dbc96e20362493433871cfac2b75d148d3b85f
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
