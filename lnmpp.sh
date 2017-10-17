@@ -41,11 +41,11 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.30
+    ! test -n "$PHP_VER" && PHP_VER=5.6.31
     ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.12.0
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.35
-    ! test -n "$PGSQL_VER" && PGSQL_VER=9.6.2
+    ! test -n "$NGINX_VER" && NGINX_VER=1.13.6
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.38
+    ! test -n "$PGSQL_VER" && PGSQL_VER=10.0
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
@@ -443,6 +443,7 @@ pkg_install() {
                 echo -ne fail\\n-----------------------------\\n
                 exit
             fi
+            ! test -d /usr/include/curl && ln -s $(find /usr/include/ -name curl) /usr/include/curl >> /dev/null 2>&1
             ! test -f /usr/include/gmp.h && ln -s $(find /usr/include/ -name gmp.h) /usr/include/gmp.h >> /dev/null 2>&1
             echo -ne done\\n-----------------------------\\n
         ;;
@@ -875,7 +876,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=f8dbc96e20362493433871cfac2b75d148d3b85f
+    sha1=0d172d1633b2e86fddc664e046412299e6be0596
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
