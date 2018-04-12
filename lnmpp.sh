@@ -58,7 +58,7 @@ init() {
     PGSQL_TAR_SRC=$SRC/postgresql-$PGSQL_VER.tar.bz2
     LIBMCRYPT_TAR_SRC=$SRC/libmcrypt-$LIBMCRYPT_VER.tar.bz2
     PHP_TAR_SRC_URL=http://php.net/distributions/php-$PHP_VER.tar.bz2
-    BFTPD_TAR_SRC_URL=http://softlayer-sng.dl.sourceforge.net/project/bftpd/bftpd/bftpd-$BFTPD_VER/bftpd-$BFTPD_VER.tar.gz
+    BFTPD_TAR_SRC_URL=http://jaist.dl.sourceforge.net/project/bftpd/bftpd/bftpd-$BFTPD_VER/bftpd-$BFTPD_VER.tar.gz
     NGINX_TAR_SRC_URL=http://nginx.org/download/nginx-$NGINX_VER.tar.gz
     MYSQL_TAR_SRC_URL=http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-$MYSQL_VER.tar.gz
     PGSQL_TAR_SRC_URL=https://ftp.postgresql.org/pub/source/v$PGSQL_VER/postgresql-$PGSQL_VER.tar.bz2
