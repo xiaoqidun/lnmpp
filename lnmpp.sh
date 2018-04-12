@@ -41,11 +41,11 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.31
-    ! test -n "$BFTPD_VER" && BFTPD_VER=4.4
-    ! test -n "$NGINX_VER" && NGINX_VER=1.13.6
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.38
-    ! test -n "$PGSQL_VER" && PGSQL_VER=10.0
+    ! test -n "$PHP_VER" && PHP_VER=5.6.35
+    ! test -n "$BFTPD_VER" && BFTPD_VER=4.9
+    ! test -n "$NGINX_VER" && NGINX_VER=1.13.12
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.39
+    ! test -n "$PGSQL_VER" && PGSQL_VER=10.3
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
@@ -427,7 +427,7 @@ HELLOWORLD
 pkg_install() {
     case "$OS" in
         "debian")
-            APT_1="libpcre3-dev libssl-dev"
+            APT_1="libpcre3-dev"
             APT_2="libncurses5-dev libreadline-dev"
             APT_3="libxslt1-dev libbz2-dev libmcrypt-dev libgmp3-dev libgd2-xpm-dev libcurl4-openssl-dev"
             echo -n "Debian apt update "
@@ -438,7 +438,13 @@ pkg_install() {
                 echo -ne done\\n
             fi
             echo -n "Debian apt install "
-            DEBIAN_FRONTEND=noninteractive bg_wait apt-get -qqy --force-yes install cmake autoconf pkg-config locales-all build-essential $APT_1 $APT_2 $APT_3
+            apt-cache show libssl1.0-dev >> /dev/null 2>&1
+            if test "$?" != "0" ; then
+                LIBSSL=libssl-dev
+            else
+                LIBSSL=libssl1.0-dev
+            fi
+            DEBIAN_FRONTEND=noninteractive bg_wait apt-get -qqy --force-yes install cmake autoconf pkg-config locales-all build-essential $LIBSSL $APT_1 $APT_2 $APT_3
             if test $(cat $BGEXEC_EXIT_STATUS_FILE) != "0" ; then
                 echo -ne fail\\n-----------------------------\\n
                 exit
