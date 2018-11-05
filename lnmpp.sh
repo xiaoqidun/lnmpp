@@ -414,10 +414,9 @@ helloworld() {
     test $OS = "ubuntu" && vvv=$(echo $OS_VER | awk -F '.' '{print$1}')
     cat <<HELLOWORLD
 -----------------------------
-Web: http://aite.xyz/
+Web: https://aite.xyz/
 Lnmpp: $VER for $OS $vvv
-Q q: 88966001 and 759234755
-Qgroup: 397723874 185806953
+Qq:88966001 Qgroup:38181604 
 Author: xiaoqidun@gmail.com
 Linux nginx mysql pgsql php
 -----------------------------
