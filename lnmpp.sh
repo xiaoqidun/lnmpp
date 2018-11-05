@@ -41,11 +41,11 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.35
-    ! test -n "$BFTPD_VER" && BFTPD_VER=4.9
-    ! test -n "$NGINX_VER" && NGINX_VER=1.13.12
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.39
-    ! test -n "$PGSQL_VER" && PGSQL_VER=10.3
+    ! test -n "$PHP_VER" && PHP_VER=5.6.38
+    ! test -n "$BFTPD_VER" && BFTPD_VER=5.0
+    ! test -n "$NGINX_VER" && NGINX_VER=1.15.5
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.42
+    ! test -n "$PGSQL_VER" && PGSQL_VER=11.0
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
