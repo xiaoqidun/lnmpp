@@ -276,8 +276,7 @@ init_exec() {
         ;;
         "--help")
             cat <<HELP
-Q q: 88966001 and 759234755
-Qgroup: 397723874 185806953
+Qq:88966001 Qgroup:38181604 
 Author: xiaoqidun@gmail.com
 Linux nginx mysql pgsql php
 ---------------------------
