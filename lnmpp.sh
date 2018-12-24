@@ -24,13 +24,11 @@ init() {
     ! test -n "$PREFIX" && PREFIX=/opt
     BIN_PREFIX=$PREFIX
     PHP_PREFIX=$PREFIX/atphp
-    BFTPD_PREFIX=$PREFIX/bftpd
     NGINX_PREFIX=$PREFIX/nginx
     MYSQL_PREFIX=$PREFIX/mysql
     PGSQL_PREFIX=$PREFIX/pgsql
     __XQD_PREFIX=$PREFIX/_xqd_
     LIBMCRYPT_PREFIX=$__XQD_PREFIX/root/libmcrypt
-    ! test -n "$DISABLE_BFTPD" && DISABLE_BFTPD=1
     ! test -n "$DISABLE_MYSQL" && DISABLE_MYSQL=1
     ! test -n "$DISABLE_POSTGRESQL" && DISABLE_POSTGRESQL=1
     NGINX_USER=nginx
@@ -42,7 +40,6 @@ init() {
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
     ! test -n "$PHP_VER" && PHP_VER=5.6.38
-    ! test -n "$BFTPD_VER" && BFTPD_VER=5.0
     ! test -n "$NGINX_VER" && NGINX_VER=1.15.5
     ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.42
     ! test -n "$PGSQL_VER" && PGSQL_VER=11.0
@@ -52,17 +49,14 @@ init() {
     SRC=$XPWD/xiaoqidun/src
     WWW=$XPWD/xiaoqidun/www
     PHP_TAR_SRC=$SRC/php-$PHP_VER.tar.bz2
-    BFTPD_TAR_SRC=$SRC/bftpd-$BFTPD_VER.tar.gz
     NGINX_TAR_SRC=$SRC/nginx-$NGINX_VER.tar.gz
     MYSQL_TAR_SRC=$SRC/mysql-$MYSQL_VER.tar.gz
     PGSQL_TAR_SRC=$SRC/postgresql-$PGSQL_VER.tar.bz2
     LIBMCRYPT_TAR_SRC=$SRC/libmcrypt-$LIBMCRYPT_VER.tar.bz2
     PHP_TAR_SRC_URL=http://php.net/distributions/php-$PHP_VER.tar.bz2
-    BFTPD_TAR_SRC_URL=http://jaist.dl.sourceforge.net/project/bftpd/bftpd/bftpd-$BFTPD_VER/bftpd-$BFTPD_VER.tar.gz
     NGINX_TAR_SRC_URL=http://nginx.org/download/nginx-$NGINX_VER.tar.gz
     MYSQL_TAR_SRC_URL=http://dev.mysql.com/get/Downloads/MySQL-5.6/mysql-$MYSQL_VER.tar.gz
     PGSQL_TAR_SRC_URL=https://ftp.postgresql.org/pub/source/v$PGSQL_VER/postgresql-$PGSQL_VER.tar.bz2
-    BFTPD_SRC_DIR=$SRC/bftpd
     PHP_SRC_DIR=$SRC/php-$PHP_VER
     NGINX_SRC_DIR=$SRC/nginx-$NGINX_VER
     MYSQL_SRC_DIR=$SRC/mysql-$MYSQL_VER
@@ -101,7 +95,6 @@ init() {
         --with-openssl --with-gettext --with-gd --with-xpm-dir --with-png-dir --with-jpeg-dir --with-freetype-dir\
         $PHP_PGSQL $PHP_MYSQL"
     fi
-    BFTPD_CONFIGURE="./configure --prefix=$BFTPD_PREFIX --enable-libz"
     NGINX_CONFIGURE="./configure --prefix=$NGINX_PREFIX --with-stream --with-stream_ssl_module\
     --with-http_v2_module --with-http_ssl_module --with-http_realip_module --with-http_addition_module\
     --with-http_sub_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module\
@@ -118,12 +111,6 @@ init() {
     xqd_download
     tar_extract
     test "$OS" = "centos" && src_install libmcrypt
-    if test "$DISABLE_BFTPD" = "0" ; then
-        disable bftpd
-    else
-        src_install bftpd
-        config_init bftpd
-    fi
     src_install nginx
     config_init nginx
     if test "$DISABLE_MYSQL" = "0" ; then
@@ -144,10 +131,6 @@ init() {
 }
 disable() {
     case "$1" in
-        "bftpd")
-            grep '#\$xpwd/bftpd' $__XQD_PREFIX/init/lnmpp >> /dev/null 2>&1
-            test "$?" = "1" && sed -i 's|\$xpwd/bftpd|#\$xpwd/bftpd|' $__XQD_PREFIX/init/lnmpp
-        ;;
         "mysql")
             grep '#\$xpwd/mysql' $__XQD_PREFIX/init/lnmpp >> /dev/null 2>&1
             test "$?" = "1" && sed -i 's|\$xpwd/mysql|#\$xpwd/mysql|' $__XQD_PREFIX/init/lnmpp
@@ -285,12 +268,10 @@ Linux nginx mysql pgsql php
 --mysqlpassword=
 --postgresqlpassword=
 ---------------------------
---disablebftpd
 --disablemysql
 --disablepostgresql
 ---------------------------
 --phpversion=
---bftpdversion=
 --nginxversion=
 --mysqlversion=
 --postgresqlversion=
@@ -316,9 +297,6 @@ HELP
         "--phpversion")
             test "$2" != "" && PHP_VER="$2"
         ;;
-        "--bftpdversion")
-            test "$2" != "" && BFTPD_VER="$2"
-        ;;
         "--nginxversion")
             test "$2" != "" && NGINX_VER="$2"
         ;;
@@ -329,10 +307,7 @@ HELP
             test "$2" != "" && PGSQL_VER="$2"
         ;;
         "--checkport")
-            ss -anpl 2>> /dev/null | grep -E ":21|:80|:3306|:5432|\"php-fpm\"" && exit 2
-        ;;
-        "--disablebftpd")
-            DISABLE_BFTPD=0
+            ss -anpl 2>> /dev/null | grep -E ":80|:3306|:5432|\"php-fpm\"" && exit 2
         ;;
         "--disablemysql")
             DISABLE_MYSQL=0
@@ -358,7 +333,6 @@ write_cfg() {
     sed -i "s|{VER}|$VER|" $__XQD_PREFIX/.cfg
     sed -i "s|{PREFIX}|$PREFIX|" $__XQD_PREFIX/.cfg
     sed -i "s|{PHP_PREFIX}|$PHP_PREFIX|" $__XQD_PREFIX/.cfg
-    sed -i "s|{BFTPD_PREFIX}|$BFTPD_PREFIX|" $__XQD_PREFIX/.cfg
     sed -i "s|{NGINX_PREFIX}|$NGINX_PREFIX|" $__XQD_PREFIX/.cfg
     sed -i "s|{MYSQL_PREFIX}|$MYSQL_PREFIX|" $__XQD_PREFIX/.cfg
     sed -i "s|{PGSQL_PREFIX}|$PGSQL_PREFIX|" $__XQD_PREFIX/.cfg
@@ -371,7 +345,7 @@ write_cfg() {
     sed -i "s|{PHPFPM_USER}|$PHPFPM_USER|" $__XQD_PREFIX/.cfg
     sed -i "s|{PHPFPM_GROUP}|$PHPFPM_GROUP|" $__XQD_PREFIX/.cfg
     sed -i "s|{NGINX_DEFAULT_WEB_ROOT}|$NGINX_DEFAULT_WEB_ROOT|" $__XQD_PREFIX/.cfg
-    echo -e "#!/bin/bash\\n#By xiaoqidun@gmail.com\\nexport PATH=$PATH:$__XQD_PREFIX/sbin:$__XQD_PREFIX/init:$BFTPD_PREFIX/bin:$NGINX_PREFIX/sbin:$MYSQL_PREFIX/bin:$PGSQL_PREFIX/bin:$PHP_PREFIX/bin:$PHP_PREFIX/sbin\\n/bin/bash" > $__XQD_PREFIX/sbin/shell 2>&1
+    echo -e "#!/bin/bash\\n#By xiaoqidun@gmail.com\\nexport PATH=$PATH:$__XQD_PREFIX/sbin:$__XQD_PREFIX/init:$NGINX_PREFIX/sbin:$MYSQL_PREFIX/bin:$PGSQL_PREFIX/bin:$PHP_PREFIX/bin:$PHP_PREFIX/sbin\\n/bin/bash" > $__XQD_PREFIX/sbin/shell 2>&1
     test -f $__XQD_PREFIX/sbin/shell && chmod 0700 $__XQD_PREFIX/sbin/shell 2>> /dev/null && ln -s $__XQD_PREFIX/sbin/shell /usr/local/sbin/lnmpp.shell 2>> /dev/null
 }
 check_root() {
@@ -525,34 +499,6 @@ src_install() {
                     exit
                 fi
             ;;
-            "bftpd")
-                cd $BFTPD_SRC_DIR
-                rm -f Makefile
-                src_configure $1 >> /dev/null 2>&1 &
-                echo -n Configure bftpd\ ;wait_pid $!
-                if test -f $BFTPD_SRC_DIR/Makefile ; then
-                    echo -ne done\\n
-                else
-                    echo -ne fail\\n
-                    exit
-                fi
-                make $MAKE_J >> /dev/null 2>&1 &
-                echo -n Make bftpd\ ;wait_pid $!
-                if test -x $BFTPD_SRC_DIR/bftpd ; then
-                    echo -ne done\\n
-                else
-                    echo -ne fail\\n
-                    exit
-                fi
-                make install >> /dev/null 2>&1 &
-                echo -n Make install bftpd\ ;wait_pid $!
-                if test -x $BFTPD_PREFIX/sbin/bftpd ; then
-                    echo -ne done\\n
-                else
-                    echo -ne fail\\n
-                    exit
-                fi
-            ;;
             "nginx")
                 cd $NGINX_SRC_DIR
                 src_configure $1 >> /dev/null 2>&1 &
@@ -690,16 +636,6 @@ config_init() {
                 chmod 0755 $__XQD_PREFIX/init/phpfpm
                 echo -ne \\b\\b\\b\\bdone\\n
             ;;
-            "bftpd")
-                echo -n Bftpd config file init ....
-                test -d $BFTPD_PREFIX/bin && rm -rf $BFTPD_PREFIX/bin
-                mv $BFTPD_PREFIX/{sbin,bin}
-                rm -rf $BFTPD_PREFIX/{man,var}
-                mkdir -p $BFTPD_PREFIX/log
-                cp $ETC/bftpd.conf $BFTPD_PREFIX/etc/bftpd.conf
-                sed -i "s|{BFTPD_PREFIX}|$BFTPD_PREFIX|" $BFTPD_PREFIX/etc/bftpd.conf
-                echo -ne \\b\\b\\b\\bdone\\n
-            ;;
             "nginx")
                 echo -n Nginx config file init ....
                 cp $ETC/nginx.conf $NGINX_PREFIX/conf
@@ -797,16 +733,10 @@ global_init() {
             case "$CENTOS_VER_ID" in
                 "7")
                     firewall-cmd --permanent --zone=public --add-port=80/tcp >> /dev/null 2>&1
-                    if test "$DISABLE_BFTPD" = "1" ; then
-                        firewall-cmd --permanent --zone=public --add-port=21/tcp >> /dev/null 2>&1
-                    fi
                     firewall-cmd --reload >> /dev/null 2>&1
                 ;;
                 "6")
                     iptables -I INPUT -p tcp --dport 80 -j ACCEPT >> /dev/null 2>&1
-                    if test "$DISABLE_BFTPD" = "1" ; then
-                        iptables -I INPUT -p tcp --dport 21 -j ACCEPT >> /dev/null 2>&1
-                    fi
                     service iptables save >> /dev/null 2>&1
                 ;;
             esac
@@ -817,16 +747,6 @@ global_init() {
     echo -e -----------------------------\\nAll Installation Complete\\n-----------------------------\\nProcessed\ in\ $(awk "BEGIN{print `date +%s`-$init_date}")\ second\(s\)
 }
 tar_extract() {
-    if ! test -d $BFTPD_SRC_DIR && test "$DISABLE_BFTPD" = "1" ; then
-        echo -n +Extract bftpd ....
-        tar -axf $BFTPD_TAR_SRC -C $SRC >> /dev/null 2>&1
-        if ! test -d $BFTPD_SRC_DIR ; then
-            echo -ne \\b\\b\\b\\bfail\\n
-            exit
-        else
-            echo -ne \\b\\b\\b\\bdone\\n
-        fi
-    fi
     if ! test -d $NGINX_SRC_DIR ; then
         echo -n +Extract nginx ....
         tar -axf $NGINX_TAR_SRC -C $SRC >> /dev/null 2>&1
@@ -942,8 +862,7 @@ sfx_extract() {
     fi
 }
 xqd_download() {
-    if ! test -f $PHP_TAR_SRC || ! test -f $BFTPD_TAR_SRC || ! test -f $NGINX_TAR_SRC || ! test -f $MYSQL_TAR_SRC || ! test -f $PGSQL_TAR_SRC ; then
-        src_download $BFTPD_TAR_SRC $BFTPD_TAR_SRC_URL "Download bftpd "
+    if ! test -f $PHP_TAR_SRC || ! test -f $NGINX_TAR_SRC || ! test -f $MYSQL_TAR_SRC || ! test -f $PGSQL_TAR_SRC ; then
         src_download $NGINX_TAR_SRC $NGINX_TAR_SRC_URL "Download nginx "
         src_download $MYSQL_TAR_SRC $MYSQL_TAR_SRC_URL "Download mysql "
         src_download $PGSQL_TAR_SRC $PGSQL_TAR_SRC_URL "Download pgsql "
@@ -969,9 +888,6 @@ src_configure() {
         case "$1" in
             "php")
                 $PHP_CONFIGURE
-            ;;
-            "bftpd")
-                $BFTPD_CONFIGURE
             ;;
             "nginx")
                 $NGINX_CONFIGURE
