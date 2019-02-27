@@ -39,10 +39,10 @@ init() {
     PGSQL_GROUP=postgres
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
-    ! test -n "$PHP_VER" && PHP_VER=5.6.38
-    ! test -n "$NGINX_VER" && NGINX_VER=1.15.5
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.42
-    ! test -n "$PGSQL_VER" && PGSQL_VER=11.0
+    ! test -n "$PHP_VER" && PHP_VER=5.6.40
+    ! test -n "$NGINX_VER" && NGINX_VER=1.15.9
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.43
+    ! test -n "$PGSQL_VER" && PGSQL_VER=11.2
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
@@ -800,7 +800,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=f5c3467a09b30d237068f3259e8d283c07b60918
+    sha1=79f5f222568a3a50ff095084443e82188d3be3bf
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
@@ -905,7 +905,7 @@ src_configure() {
     fi
 }
 path
-VER=1.8
+VER=1.9
 for((i=1;i<=$#;i++)); do
     ini_cfg=${!i}
     ini_cfg_a=`echo $ini_cfg | sed -r s/^-?-?.*=//`
