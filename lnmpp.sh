@@ -40,9 +40,9 @@ init() {
     PHPFPM_USER=linux
     PHPFPM_GROUP=linux
     ! test -n "$PHP_VER" && PHP_VER=5.6.40
-    ! test -n "$NGINX_VER" && NGINX_VER=1.15.9
-    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.43
-    ! test -n "$PGSQL_VER" && PGSQL_VER=11.2
+    ! test -n "$NGINX_VER" && NGINX_VER=1.17.1
+    ! test -n "$MYSQL_VER" && MYSQL_VER=5.6.44
+    ! test -n "$PGSQL_VER" && PGSQL_VER=11.4
     LIBMCRYPT_VER=2.5.8
     ETC=$XPWD/xiaoqidun/etc
     XQD=$XPWD/xiaoqidun/xqd
@@ -183,7 +183,7 @@ bin_file() {
             test "$aaaa" = "i586" && aaaa=x86
             test "$aaaa" = "x86_64" && aaaa=x64
             test "$(echo $aaaa | cut -b1-3)" = "arm" && aaaa=arm
-            echo xqd_debian$(echo $OS_VER | cut -b1)_$aaaa.bin
+            echo xqd_debian$(echo $OS_VER | awk -F '.' '{print$1}')_$aaaa.bin
         ;;
         "centos")
             aaaa=`uname -m`
@@ -192,12 +192,12 @@ bin_file() {
             test "$aaaa" = "i486" && aaaa=x86
             test "$aaaa" = "i586" && aaaa=x86
             test "$aaaa" = "x86_64" && aaaa=x64
-            echo xqd_centos$(echo $OS_VER | cut -b1)_$aaaa.bin
+            echo xqd_centos$(echo $OS_VER | awk -F '.' '{print$1}')_$aaaa.bin
         ;;
     esac
 }
 bin_sha1() {
-    case "$OS$(echo $OS_VER | cut -b1)" in
+    case "$OS$(echo $OS_VER | awk -F '.' '{print$1}')" in
         "debian7")
             aaaa=`uname -m`
             test "$aaaa" = "i686" && aaaa=x86
@@ -384,8 +384,7 @@ user_group() {
     usermod -a -G $PHPFPM_GROUP $NGINX_USER >> /dev/null 2>&1
 }
 helloworld() {
-    vvv=$(echo $OS_VER | cut -b1)
-    test $OS = "ubuntu" && vvv=$(echo $OS_VER | awk -F '.' '{print$1}')
+    vvv=$(echo $OS_VER | awk -F '.' '{print$1}')
     cat <<HELLOWORLD
 -----------------------------
 Web: https://aite.xyz/
@@ -401,7 +400,13 @@ pkg_install() {
         "debian")
             APT_1="libpcre3-dev"
             APT_2="libncurses5-dev libreadline-dev"
-            APT_3="libxslt1-dev libbz2-dev libmcrypt-dev libgmp3-dev libgd2-xpm-dev libcurl4-openssl-dev"
+            APT_3="libxslt1-dev libbz2-dev libmcrypt-dev libgmp3-dev libcurl4-openssl-dev"
+            if test $(echo $OS_VER | awk -F '.' '{print$1}') > 9 ; then
+                APT_4="libgd-dev"
+            else
+                APT_4="libgd2-xpm-dev"
+            fi
+            LIBSSL=libssl-dev
             echo -n "Debian apt update "
             bg_wait apt-get update
             if test $(cat $BGEXEC_EXIT_STATUS_FILE) != "0" ; then
@@ -410,13 +415,7 @@ pkg_install() {
                 echo -ne done\\n
             fi
             echo -n "Debian apt install "
-            apt-cache show libssl1.0-dev >> /dev/null 2>&1
-            if test "$?" != "0" ; then
-                LIBSSL=libssl-dev
-            else
-                LIBSSL=libssl1.0-dev
-            fi
-            DEBIAN_FRONTEND=noninteractive bg_wait apt-get -qqy --force-yes install cmake autoconf pkg-config locales-all build-essential $LIBSSL $APT_1 $APT_2 $APT_3
+            DEBIAN_FRONTEND=noninteractive bg_wait apt-get -qqy --force-yes install cmake autoconf pkg-config locales-all build-essential $LIBSSL $APT_1 $APT_2 $APT_3 $APT_4
             if test $(cat $BGEXEC_EXIT_STATUS_FILE) != "0" ; then
                 echo -ne fail\\n-----------------------------\\n
                 exit
@@ -729,7 +728,7 @@ global_init() {
         "centos")
             ln -s $__XQD_PREFIX/init/lnmpp /etc/init.d/lnmpp >> /dev/null 2>&1
             chkconfig lnmpp on >> /dev/null 2>&1
-            CENTOS_VER_ID=$(echo $OS_VER | cut -b1) >> /dev/null 2>&1
+            CENTOS_VER_ID=$(echo $OS_VER | awk -F '.' '{print$1}') >> /dev/null 2>&1
             case "$CENTOS_VER_ID" in
                 "7")
                     firewall-cmd --permanent --zone=public --add-port=80/tcp >> /dev/null 2>&1
@@ -800,7 +799,7 @@ tar_extract() {
 }
 xqd_extract() {
     file=xiaoqidun.tar.bz2
-    sha1=79f5f222568a3a50ff095084443e82188d3be3bf
+    sha1=a86d8e91bb325daa1bf5810d7a7625edf32d32ed
     if test -f $file && test "$(sha1sum $file | awk '{print$1}')" = "$sha1" ; then
         tar -jxf $file >> /dev/null 2>&1 &
         echo -n +Extract lnmpp package\ ;wait_pid $!
